@@ -203,32 +203,33 @@
       selectedVoice = voices[this.value];
     });
 
-    async function sendMessage() {
-      const input = document.getElementById('userInput');
-      const messages = document.getElementById('messages');
-      const userText = input.value.trim();
-      if (!userText) return;
+   async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const messages = document.getElementById('messages');
+  const userText = input.value.trim();
+  if (!userText) return;
 
-      messages.innerHTML += `<div class="message user"><strong class="user">You:</strong> ${userText}</div>`;
-      input.value = '';
+  messages.innerHTML += `<div class="message user"><strong class="user">You:</strong> ${userText}</div>`;
+  input.value = '';
 
-      try {
-        const res = await fetch('/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userText })
-        });
-        const data = await res.json();
-        messages.innerHTML += `<div class="message bot"><strong class="bot">Chat Katherine:</strong> ${data.reply}</div>`;
-        speak(data.reply.replace(/<[^>]*>/g, ''));
-      } catch (err) {
-        const errorMsg = "Chat Katherine: Server error 😓";
-        messages.innerHTML += `<div class="message bot"><strong class="bot">${errorMsg}</strong></div>`;
-        speak(errorMsg);
-      }
+  try {
+    const res = await fetch('https://mouse-chatbox.onrender.com/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userText })
+    });
+    const data = await res.json();
+    messages.innerHTML += `<div class="message bot"><strong class="bot">Chat Katherine:</strong> ${data.reply}</div>`;
+    speak(data.reply.replace(/<[^>]*>/g, ''));
+  } catch (err) {
+    const errorMsg = "Chat Katherine: Server error 😓";
+    messages.innerHTML += `<div class="message bot"><strong class="bot">${errorMsg}</strong></div>`;
+    speak(errorMsg);
+  }
 
-      messages.scrollTop = messages.scrollHeight;
-    }
+  messages.scrollTop = messages.scrollHeight;
+}
+
 
     function resetChat() {
       document.getElementById('messages').innerHTML = '';
