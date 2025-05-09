@@ -97,7 +97,7 @@ Always reply with code using triple backticks (like \`\`\`js) when giving exampl
   }
 });
 
-// ✅ Start server
-app.listen(PORT, () => {
-  console.log(`🧙 Chat Katherine is running at http://localhost:${PORT}`);
+// ✅ Start server (FOR RENDER HOSTING)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🧙 Chat Katherine is live on port ${PORT}`);
 });
