@@ -4,29 +4,29 @@ const axios = require('axios');
 const path = require('path');
 
 const app = express();
-const port = 3000;
 
-// Replace with your real keys
-const OPENROUTER_KEY = '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';
-const OPENWEATHER_KEY = '0f9c4f054043fc28e0a4f1627a8dc798';
+// ✅ Load environment variables securely
+const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
+const OPENWEATHER_KEY = process.env.OPENWEATHER_KEY;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-// ✅ Serve static files (HTML, CSS, JS, and images folder)
+// ✅ Serve static files (images, css, etc.)
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.static(__dirname));
 
-// ✅ Serve your main HTML file
+// ✅ Serve main HTML
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// ✅ Chat endpoint with OpenRouter + weather logic
+// ✅ Chat endpoint
 app.post('/chat', async (req, res) => {
   const { message } = req.body;
 
-  // 🌦️ Weather check
+  // 🌦 Weather Check
   const weatherRegex = /weather in ([a-zA-Z\s]+)/i;
   const match = message.match(weatherRegex);
 
@@ -42,9 +42,9 @@ app.post('/chat', async (req, res) => {
       });
 
       const weather = weatherRes.data;
-      const reply = `☀️ Weather in ${weather.name}: ${weather.weather[0].description}, Temp: ${weather.main.temp}°C`;
-      return res.json({ reply });
-
+      return res.json({
+        reply: `☀️ Weather in ${weather.name}: ${weather.weather[0].description}, Temp: ${weather.main.temp}°C`
+      });
     } catch (error) {
       console.error('❌ Weather API Error:', error.response?.data || error.message);
       return res.json({
@@ -53,7 +53,7 @@ app.post('/chat', async (req, res) => {
     }
   }
 
-  // 🧠 OpenRouter fallback (only if not a weather message)
+  // 🧠 AI Response
   try {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
@@ -97,8 +97,7 @@ Always reply with code using triple backticks (like \`\`\`js) when giving exampl
   }
 });
 
-const PORT = process.env.PORT || 3000;
-
+// ✅ Start server
 app.listen(PORT, () => {
   console.log(`🧙 Chat Katherine is running at http://localhost:${PORT}`);
 });
