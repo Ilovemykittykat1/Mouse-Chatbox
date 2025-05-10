@@ -10,6 +10,9 @@ const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
 const OPENWEATHER_KEY = process.env.OPENWEATHER_KEY;
 const PORT = process.env.PORT || 3000;
 
+// 🔍 Debug log to check the key is actually loading
+console.log("🔑 OPENROUTER_KEY:", OPENROUTER_KEY);
+
 app.use(cors());
 app.use(express.json());
 
@@ -69,7 +72,7 @@ Always reply with code using triple backticks (like \`\`\`js) when giving exampl
       },
       {
         headers: {
-          'Authorization': `Bearer ${OPENROUTER_KEY}`,
+          'Authorization': `Bearer ${String(OPENROUTER_KEY).trim()}`,
           'Content-Type': 'application/json'
         }
       }
