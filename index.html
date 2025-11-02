@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Great Purrfessor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+<style>
+  body {
+    background: radial-gradient(circle at center, #812b9e, #2c2be2);
+    font-family: 'Uncial Antiqua', cursive;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 2.3em;
+    text-shadow: 2px 2px 8px #ff00ff88;
+    margin-top: 35px;
+  }
+
+  h2 {
+    font-size: 1.4em;
+    color: #ffdeff;
+    margin-bottom: 25px;
+  }
+
+  .cat-chat {
+    position: relative;
+    display: inline-block;
+  }
+
+  #catImage {
+    width: 420px;
+    height: auto;
+    cursor: pointer;
+    filter: drop-shadow(0 0 20px #ff00ff)
+            drop-shadow(0 0 40px #ff33ff);
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  #catImage.glow {
+    filter: drop-shadow(0 0 35px #ff55ff)
+            drop-shadow(0 0 70px #ff99ff);
+    transform: scale(1.03);
+  }
+
+  #messages {
+    position: absolute;
+    top: 43%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    max-height: 90px;
+    overflow: hidden;
+    color: #ffd9ff;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.4;
+    text-shadow: 0 0 12px #ff00ff;
+    white-space: normal;
+    word-wrap: break-word;
+    animation: fadeIn 0.5s ease-in-out;
+    pointer-events: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+
+<body>
+  <h1>The Great Purrfessor</h1>
+  <h2>Tap the nose to talk with the Great Purrfessor of Knowledge.</h2>
+
+  <div class="cat-chat">
+    <img id="catImage" src="images/crystal.png" alt="Glowing Cat" onclick="startListening()">
+    <div id="messages"></div>
+  </div>
+
+  <script>
+    const cat = document.getElementById('catImage');
+    const messages = document.getElementById('messages');
+
+    function toggleGlow(on) {
+      if (on) cat.classList.add('glow');
+      else cat.classList.remove('glow');
+    }
+
+    function speak(text) {
+      const synth = window.speechSynthesis;
+      const voices = synth.getVoices();
+      const voice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Jenny') || v.name.includes('Female'))) 
+                  || voices.find(v => v.lang === 'en-US');
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.voice = voice;
+      utter.pitch = 1.1;
+      utter.rate = 1;
+      toggleGlow(true);
+      utter.onend = () => toggleGlow(false);
+      synth.cancel();
+      synth.speak(utter);
+    }
+
+    async function askAI(question) {
+      try {
+        const res = await fetch('https://mouse-chatbox.onrender.com/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: question })
+        });
+        const data = await res.json();
+        const reply = data.reply.replace(/<[^>]*>/g, '');
+        messages.innerHTML = `<div>${reply}</div>`;
+        speak(reply);
+      } catch {
+        const fallback = "Chat Katherine: My connection to the server is faint. Try again soon.";
+        messages.innerHTML = `<div>${fallback}</div>`;
+        speak(fallback);
+      }
+    }
+
+    function startListening() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech Recognition not supported. Please use Chrome or Edge.");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+      toggleGlow(true);
+
+      recognition.onresult = (event) => {
+        const spokenText = event.results[0][0].transcript;
+        messages.innerHTML = `<div><em>${spokenText}</em></div>`;
+        askAI(spokenText);
+      };
+
+      recognition.onerror = () => toggleGlow(false);
+      recognition.onend = () => toggleGlow(false);
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+  </script>
+</body>
+</html>

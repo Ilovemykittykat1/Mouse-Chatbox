@@ -1,28 +1,24 @@
-# Mouse-Chatbox: The Digital Familiar
+# 🐾 Mouse-Chatbox: The Digital Familiar 💬
 
-Welcome to *Mouse’s Enchanted Adventures: The Digital Familiar* — a magical AI chatbox experience built with HTML, JavaScript, and Node.js, hosted on Render.
+Welcome to **Mouse's Enchanted Adventures: The Digital Familiar** — a magical AI chatbox experience built with HTML, JavaScript, and Node.js, hosted on Render.
 
-This project features a custom voice chat interface, mystical UI, and integrations for voice selection, speech synthesis, and speech recognition. Just ask a question or speak aloud — the familiar listens and responds with wit and wisdom.
+This project features a custom voice chat interface, mystical UI, and integrations for voice selection, speech synthesis, and speech recognition. Just ask a question or talk, and the familiar responds!
 
-## 🌐 Live App
-[https://mouse-chatbox.onrender.com](https://mouse-chatbox.onrender.com)
+## 🌐 Live App  
+🔗 [https://mouse-chatbox.onrender.com](https://mouse-chatbox.onrender.com)
 
-> Note: This app is hosted on Render’s free tier. It may take up to 50 seconds to wake up from sleep after inactivity.
+> ⚠️ **Note**: This app is running on Render’s free tier, so it may take up to 50 seconds to wake up from sleep due to inactivity.
 
 ---
 
-## ✨ Features
-- Voice recognition powered by the Web Speech API  
-- Custom voice selection for lifelike responses  
-- AI conversation through a Node.js backend  
-- Enchanted front-end design with a glowing crystal-ball motif  
-- Optional integration with YouTube search for background ambiance  
+## 🧙‍♀️ Features
+
+- 🎤 Voice recognition via Web Speech API  
+- 🗣️ Custom voice selection for responses  
+- 💬 AI chat interaction via a backend endpoint  
+- 🔮 Mystical front-end design with a crystal ball theme  
+- 🎵 YouTube search shortcut for magical music vibes  
 
 ---
 
 ## 🛠️ How to Run Locally
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ilovemykittykat1/Mouse-Chatbox.git
-   cd Mouse-Chatbox
